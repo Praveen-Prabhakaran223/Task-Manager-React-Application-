@@ -1,0 +1,157 @@
+To run your React task management app on another MacBook, follow these detailed steps:
+
+### 1. Install Prerequisites
+```bash
+# Install Homebrew (package manager)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install Node.js and npm
+brew install node
+
+# Install Git (if not already installed)
+brew install git
+
+# Verify installations
+node -v  # Should show v18.x or higher
+npm -v   # Should show 9.x or higher
+git --version
+```
+
+### 2. Set Up Project Files
+```bash
+# Create project directory
+mkdir taskflow-pro
+cd taskflow-pro
+
+# Transfer your files (App.jsx, App.css, etc.) to this directory
+# If using USB: Copy files to the new directory
+# If using Git: Initialize repository and push/pull files
+```
+
+### 3. Initialize React Project
+```bash
+# Create new React app
+npx create-react-app .
+
+# Replace generated files with your files:
+# - Replace src/App.js with your App.jsx
+# - Replace src/App.css with your App.css
+# - Delete unnecessary files (logo.svg, reportWebVitals.js, etc.)
+```
+
+### 4. Install Dependencies
+```bash
+npm install axios
+npm install react-icons  # If you're using icons
+npm install react-router-dom  # If using routing
+npm install date-fns  # If using date utilities
+```
+
+### 5. Configure Environment Variables
+Create `.env` file in project root:
+```env
+REACT_APP_API_BASE_URL=http://localhost:3001
+REACT_APP_USE_MOCK_API=false
+```
+
+### 6. Modify API Calls
+Update all axios calls to use environment variable:
+```jsx
+// Instead of hardcoded URLs:
+await axios.get(`http://localhost:3001/tasks`);
+
+// Use:
+await axios.get(`${process.env.REACT_APP_API_BASE_URL}/tasks`);
+```
+
+### 7. Set Up Mock Backend (Optional)
+If you don't have the backend ready:
+```bash
+npm install -g json-server
+echo '{
+  "tasks": []
+}' > db.json
+json-server --watch db.json --port 3001
+```
+
+### 8. Fix JSX File Extension
+Rename `App.js` to `App.jsx` and update `index.js`:
+```jsx
+// In index.js:
+import App from './App';  // Change to './App.jsx' if needed
+```
+
+### 9. Start the Application
+```bash
+npm start
+```
+
+### 10. Troubleshooting Common Issues
+
+**Issue: Syntax errors in JSX**
+```bash
+npm install @babel/plugin-proposal-class-properties
+```
+Create `.babelrc` file:
+```json
+{
+  "plugins": ["@babel/plugin-proposal-class-properties"]
+}
+```
+
+**Issue: CSS not loading**
+- Make sure all class names match between JSX and CSS
+- Check for proper imports: `import './App.css';`
+
+**Issue: API connection errors**
+1. Check backend server is running
+2. Verify CORS settings on backend
+3. Test API with Postman/curl:
+```bash
+curl -H "Authorization: Bearer fake-jwt-token" http://localhost:3001/tasks
+```
+
+### 11. Production Build (Optional)
+```bash
+npm run build
+serve -s build  # Install serve with: npm install -g serve
+```
+
+### File Structure Should Look Like:
+```
+taskflow-pro/
+├── node_modules/
+├── public/
+│   ├── index.html
+│   └── favicon.ico
+├── src/
+│   ├── App.jsx
+│   ├── App.css
+│   ├── index.js
+│   └── index.css
+├── .env
+├── package.json
+└── README.md
+```
+
+### Additional Setup for Backend
+If you need to set up the backend too:
+```bash
+# Clone backend repo (if separate)
+git clone <backend-repo-url> backend
+cd backend
+npm install
+
+# Start backend server
+npm run dev
+```
+
+### Key Dependencies to Verify in package.json:
+```json
+"dependencies": {
+  "axios": "^1.7.2",
+  "react": "^18.2.0",
+  "react-dom": "^18.2.0",
+  "react-scripts": "^5.0.1"
+}
+```
